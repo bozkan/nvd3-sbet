@@ -3,10 +3,10 @@
 // and used by Meteor https://www.meteor.com/ and its package repository Atmosphere https://atmospherejs.com
 
 Package.describe({
-    "name": 'nvd3:nvd3',
+    "name": 'nvd3-sbet',
     summary: 'Nvd3.org charts.',
-    version: '1.8.1',
-    git: "https://github.com/novus/nvd3.git"
+    version: '0.0.1',
+    git: "https://github.com/bozkan/nvd3-sbet.git"
 });
 Package.on_use(function (api) {
     api.versionsFrom("METEOR@1.0");
