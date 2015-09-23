@@ -1,5 +1,6 @@
 {
   "name": "nvd3-sbet",
+  "version": "0.0.1",
   "homepage": "http://www.nvd3.org",
   "authors": [
     "Bob Monteverde",
@@ -8,7 +9,6 @@
     "Frank Shao",
     "liquidpele"
   ],
-  "version": "0.0.1",
   "description": "Re-usable charts and chart components for d3.",
   "main": [
     "build/nv.d3.js",
