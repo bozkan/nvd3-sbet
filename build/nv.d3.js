@@ -156,10 +156,10 @@ if (typeof(window) !== 'undefined') {
  * implementations in the future.
  */
 nv.dom.write = function(callback) {
-	if (window.fastdom !== undefined) {
-		return fastdom.write(callback);
-	}
-	return callback();
+    if (window.fastdom !== undefined) {
+        return fastdom.write(callback);
+    }
+    return callback();
 };
 
 /* Facade for queueing DOM read operations
@@ -169,10 +169,10 @@ nv.dom.write = function(callback) {
  * implementations in the future.
  */
 nv.dom.read = function(callback) {
-	if (window.fastdom !== undefined) {
-		return fastdom.read(callback);
-	}
-	return callback();
+    if (window.fastdom !== undefined) {
+        return fastdom.read(callback);
+    }
+    return callback();
 };/* Utility class to handle creation of an interactive layer.
  This places a rectangle on top of the chart. When you mouse move over it, it sends a dispatch
  containing the X-coordinate. It can also render a vertical line where the mouse is located.
@@ -1731,7 +1731,7 @@ nv.models.axis = function() {
                     if (showMaxMin) {
                         axisMaxMin = wrap.selectAll('g.nv-axisMaxMin')
                             .data(scale.domain());
-                       	axisMaxMin.enter().append('g').attr('class',function(d,i){
+                        axisMaxMin.enter().append('g').attr('class',function(d,i){
                                 return ['nv-axisMaxMin','nv-axisMaxMin-y',(i == 0 ? 'nv-axisMin-y':'nv-axisMax-y')].join(' ')
                         }).append('text')
                             .style('opacity', 0);
@@ -2731,7 +2731,7 @@ nv.models.bulletChart = function() {
         , width = null
         , height = 55
         , tickFormat = null
-	, ticks = null
+    , ticks = null
         , noData = null
         , dispatch = d3.dispatch('tooltipShow', 'tooltipHide')
         ;
@@ -10636,7 +10636,7 @@ nv.models.pieChart = function() {
 
         selection.each(function(data) {
             var container = d3.select(this);
-            nv.utils.initSVG(container);
+            //nv.utils.initSVG(container);
 
             var that = this;
             var availableWidth = nv.utils.availableWidth(width, container, margin),
