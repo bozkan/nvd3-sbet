@@ -1481,7 +1481,9 @@ Runs common initialize code on the svg before the chart builds
 nv.utils.initSVG = function(svg) {
     svg.classed({'nvd3-svg':true});
 };
-
+nv.utils.initSVGCustom = function(svg) { //stratabet added
+    svg.classed({'nvd3-svg-custom':true});
+};
 
 /*
 Sanitize and provide default for the container height.
@@ -8554,7 +8556,7 @@ nv.models.multiBarHorizontal = function() {
 
             y.domain(yDomain || d3.extent(d3.merge(seriesData).map(function(d) { return stacked ? (d.y > 0 ? d.y1 + d.y : d.y1 ) : d.y }).concat(forceY)))
 
-            if (showValues && !stacked)
+            if (showValues)
                 y.range(yRange || [(y.domain()[0] < 0 ? valuePadding : 0), availableWidth - (y.domain()[1] > 0 ? valuePadding : 0) ]);
             else
                 y.range(yRange || [0, availableWidth]);
@@ -8672,28 +8674,27 @@ nv.models.multiBarHorizontal = function() {
 
             barsEnter.append('text');
 
-            if (showValues && !stacked) {
-                bars.select('text')
-                    .attr('text-anchor', function(d,i) { return getY(d,i) < 0 ? 'end' : 'start' })
-                    .attr('y', x.rangeBand() / (data.length * 2))
-                    .attr('dy', '.32em')
-                    .text(function(d,i) {
-                        var t = valueFormat(getY(d,i))
-                            , yerr = getYerr(d,i);
-                        if (yerr === undefined)
-                            return t;
-                        if (!yerr.length)
-                            return t + '±' + valueFormat(Math.abs(yerr));
-                        return t + '+' + valueFormat(Math.abs(yerr[1])) + '-' + valueFormat(Math.abs(yerr[0]));
-                    });
-                bars.watchTransition(renderWatch, 'multibarhorizontal: bars')
-                    .select('text')
-                    .attr('x', function(d,i) { return getY(d,i) < 0 ? -4 : y(getY(d,i)) - y(0) + 4 })
+            if (showValues) {
+              bars.select('text')
+                .attr('text-anchor', '')
+                .attr('y', data.length > 1 ? x.rangeBand() / (data.length * 2) + 3 : x.rangeBand() / (data.length * 2))
+                .attr('dy', '.32em')
+                .text(function(d,i) {
+                  var t = d.y
+                    , yerr = getYerr(d,i);
+                  if (yerr === undefined)
+                    return t;
+                  if (!yerr.length)
+                    return t + '±' + valueFormat(Math.abs(yerr));
+                  return t + '+' + valueFormat(Math.abs(yerr[1])) + '-' + valueFormat(Math.abs(yerr[0]));
+                });                 bars.watchTransition(renderWatch, 'multibarhorizontal: bars')
+                .select('text')
+                .attr('x', function(d,i) { return getY(d,i) < 0 ? -4 : y(getY(d,i)) - y(0) -16 })
             } else {
-                bars.selectAll('text').text('');
+              bars.selectAll('text').text('');
             }
 
-            if (showBarLabels && !stacked) {
+            if (showBarLabels) {
                 barsEnter.append('text').classed('nv-bar-label',true);
                 bars.select('text.nv-bar-label')
                     .attr('text-anchor', function(d,i) { return getY(d,i) < 0 ? 'start' : 'end' })
@@ -8811,7 +8812,6 @@ nv.models.multiBarHorizontal = function() {
 
     return chart;
 };
-
 nv.models.multiBarHorizontalChart = function() {
     "use strict";
 
@@ -10636,7 +10636,7 @@ nv.models.pieChart = function() {
 
         selection.each(function(data) {
             var container = d3.select(this);
-            //nv.utils.initSVG(container);
+            nv.utils.initSVGCustom(container);
 
             var that = this;
             var availableWidth = nv.utils.availableWidth(width, container, margin),
@@ -12965,6 +12965,7 @@ nv.models.sunburst = function() {
         , container = null
         , color = nv.utils.defaultColor()
         , duration = 500
+        , showValues = false
         , dispatch = d3.dispatch('chartClick', 'elementClick', 'elementDblClick', 'elementMousemove', 'elementMouseover', 'elementMouseout', 'renderEnd')
         ;
 
