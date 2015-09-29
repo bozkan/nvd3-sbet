@@ -5855,6 +5855,7 @@ nv.models.line = function() {
         , interpolate = "linear" // controls the line interpolation
         , duration = 250
         , dispatch = d3.dispatch('elementClick', 'elementMouseover', 'elementMouseout', 'renderEnd')
+        , showValues = true
         ;
 
     scatter
@@ -5956,7 +5957,9 @@ nv.models.line = function() {
                         .y1(function(d,i) { return y0( y.domain()[0] <= 0 ? y.domain()[1] >= 0 ? 0 : y.domain()[1] : y.domain()[0] ) })
                         //.y1(function(d,i) { return y0(0) }) //assuming 0 is within y domain.. may need to tweak this
                         .apply(this, [d.values])
-                });
+                })
+                .classed('zart1', true);
+
             groups.exit().selectAll('path.nv-area')
                 .remove();
 
@@ -5972,7 +5975,7 @@ nv.models.line = function() {
                         .apply(this, [d.values])
                 });
 
-            var linePaths = groups.selectAll('path.nv-line')
+          var linePaths = groups.selectAll('path.nv-line')
                 .data(function(d) { return [d.values] });
 
             linePaths.enter().append('path')
@@ -5983,18 +5986,19 @@ nv.models.line = function() {
                     .defined(defined)
                     .x(function(d,i) { return nv.utils.NaNtoZero(x0(getX(d,i))) })
                     .y(function(d,i) { return nv.utils.NaNtoZero(y0(getY(d,i))) })
-            );
+                )
+                .classed('zart3', true);
 
-            linePaths.watchTransition(renderWatch, 'line: linePaths')
+          linePaths.watchTransition(renderWatch, 'line: linePaths')
                 .attr('d',
                     d3.svg.line()
                     .interpolate(interpolate)
                     .defined(defined)
                     .x(function(d,i) { return nv.utils.NaNtoZero(x(getX(d,i))) })
                     .y(function(d,i) { return nv.utils.NaNtoZero(y(getY(d,i))) })
-            );
+                );
 
-            //store old scales for use in transitions on update
+          //store old scales for use in transitions on update
             x0 = x.copy();
             y0 = y.copy();
         });
@@ -6023,6 +6027,7 @@ nv.models.line = function() {
         defined: {get: function(){return defined;}, set: function(_){defined=_;}},
         interpolate:      {get: function(){return interpolate;}, set: function(_){interpolate=_;}},
         clipEdge:    {get: function(){return clipEdge;}, set: function(_){clipEdge=_;}},
+        showValues: {get: function(){return showValues;}, set: function(_){showValues=_;}},
 
         // options that require extra logic in the setter
         margin: {get: function(){return margin;}, set: function(_){
@@ -6089,6 +6094,7 @@ nv.models.lineChart = function() {
         , noData = null
         , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState', 'renderEnd')
         , duration = 250
+        , showValues = true
         ;
 
     // set options on sub-objects for this chart
@@ -6409,6 +6415,7 @@ nv.models.lineChart = function() {
         showYAxis:    {get: function(){return showYAxis;}, set: function(_){showYAxis=_;}},
         defaultState:    {get: function(){return defaultState;}, set: function(_){defaultState=_;}},
         noData:    {get: function(){return noData;}, set: function(_){noData=_;}},
+        showValues: {get: function(){return showValues;}, set: function(_){showValues=_;}},
 
         // deprecated options
         tooltips:    {get: function(){return tooltip.enabled();}, set: function(_){
@@ -8679,6 +8686,7 @@ nv.models.multiBarHorizontal = function() {
                 .attr('text-anchor', '')
                 .attr('y', data.length > 1 ? x.rangeBand() / (data.length * 2) + 3 : x.rangeBand() / (data.length * 2))
                 .attr('dy', '.32em')
+                .classed("nvd3-field-values", true)
                 .text(function(d,i) {
                   var t = d.y
                     , yerr = getYerr(d,i);
@@ -8687,7 +8695,8 @@ nv.models.multiBarHorizontal = function() {
                   if (!yerr.length)
                     return t + '±' + valueFormat(Math.abs(yerr));
                   return t + '+' + valueFormat(Math.abs(yerr[1])) + '-' + valueFormat(Math.abs(yerr[0]));
-                });                 bars.watchTransition(renderWatch, 'multibarhorizontal: bars')
+                }); 
+              bars.watchTransition(renderWatch, 'multibarhorizontal: bars')
                 .select('text')
                 .attr('x', function(d,i) { return getY(d,i) < 0 ? -4 : y(getY(d,i)) - y(0) -16 })
             } else {
@@ -10860,6 +10869,7 @@ nv.models.scatter = function() {
         , dispatch     = d3.dispatch('elementClick', 'elementDblClick', 'elementMouseover', 'elementMouseout', 'renderEnd')
         , useVoronoi   = true
         , duration     = 250
+        , showValues   = false
         ;
 
 
@@ -11045,17 +11055,17 @@ nv.models.scatter = function() {
                     }
 
                     if (clipVoronoi) {
-                        // voronoi sections are already set to clip,
-                        // just create the circles with the IDs they expect
-                        wrap.select('.nv-point-clips').selectAll('clipPath').remove();
-                        wrap.select('.nv-point-clips').selectAll("clipPath")
-                            .data(vertices)
-                            .enter().append("svg:clipPath")
-                            .attr("id", function(d, i) { return "nv-clip-"+i;})
-                            .append("svg:circle")
-                            .attr('cx', function(d) { return d[0]; })
-                            .attr('cy', function(d) { return d[1]; })
-                            .attr('r', clipRadius);
+                      // voronoi sections are already set to clip,
+                      // just create the circles with the IDs they expect
+                      wrap.select('.nv-point-clips').selectAll('clipPath').remove();
+                      wrap.select('.nv-point-clips').selectAll("clipPath")
+                        .data(vertices)
+                        .enter().append("svg:clipPath")
+                        .attr("id", function(d, i) { return "nv-clip-"+i;})
+                        .append("svg:circle")
+                        .attr('cx', function(d) { return d[0]; })
+                        .attr('cy', function(d) { return d[1]; })
+                        .attr('r', clipRadius);
                     }
 
                     var mouseEventCallback = function(d, mDispatch) {
@@ -11193,17 +11203,38 @@ nv.models.scatter = function() {
                                 return pointActive(pointArray[0], pointIndex)
                             })
                     });
+
             points.enter().append('path')
-                .style('fill', function (d) { return d.color })
-                .style('stroke', function (d) { return d.color })
-                .attr('transform', function(d) {
-                    return 'translate(' + x0(getX(d[0],d[1])) + ',' + y0(getY(d[0],d[1])) + ')'
+              .style('fill', function (d) { return d.color })
+              .style('stroke', function (d) { return d.color })
+              .attr('transform', function(d) {
+                return 'translate(' + x0(getX(d[0],d[1])) + ',' + y0(getY(d[0],d[1])) + ')'
+              })
+              .attr('d',
+              nv.utils.symbol()
+                .type(function(d) { return getShape(d[0]); })
+                .size(function(d) { return z(getSize(d[0],d[1])) })
+              );
+            if (true) {
+              points.enter().append("text")
+                .attr("x", function (d) {
+                  return d[0];
                 })
-                .attr('d',
-                    nv.utils.symbol()
-                    .type(function(d) { return getShape(d[0]); })
-                    .size(function(d) { return z(getSize(d[0],d[1])) })
-            );
+                .attr("y", function (d) {
+                  return d[1];
+                })
+                .text(function (d) {
+                  //return d[0].team + ': ' + d[0].x + ', ' + d[0].y;
+                  if(!!d[0].team)
+                    return d[0].team; //4th graph
+                  else
+                    return d[0].y;
+                })
+                .classed("nvd3-field-values", true)
+                .classed("label", true)
+                .classed("hover", true)
+                .attr("text-anchor", "middle")
+            }
             points.exit().remove();
             groups.exit().selectAll('path.nv-point')
                 .watchTransition(renderWatch, 'scatter exit')
@@ -11303,9 +11334,10 @@ nv.models.scatter = function() {
         clipRadius:   {get: function(){return clipRadius;}, set: function(_){clipRadius=_;}},
         showVoronoi:   {get: function(){return showVoronoi;}, set: function(_){showVoronoi=_;}},
         id:           {get: function(){return id;}, set: function(_){id=_;}},
+        showValues: {get: function(){return showValues;}, set: function(_){showValues=_;}},
 
 
-        // simple functor options
+      // simple functor options
         x:     {get: function(){return getX;}, set: function(_){getX = d3.functor(_);}},
         y:     {get: function(){return getY;}, set: function(_){getY = d3.functor(_);}},
         pointSize: {get: function(){return getSize;}, set: function(_){getSize = d3.functor(_);}},
@@ -11798,36 +11830,50 @@ nv.models.sparkline = function() {
                     .y(function(d,i) { return y(getY(d,i)) })
             );
 
-            // TODO: Add CURRENT data point (Need Min, Mac, Current / Most recent)
-            var points = wrap.selectAll('circle.nv-point')
-                .data(function(data) {
-                    var yValues = data.map(function(d, i) { return getY(d,i); });
-                    function pointIndex(index) {
-                        if (index != -1) {
-                            var result = data[index];
-                            result.pointIndex = index;
-                            return result;
-                        } else {
-                            return null;
-                        }
-                    }
-                    var maxPoint = pointIndex(yValues.lastIndexOf(y.domain()[1])),
-                        minPoint = pointIndex(yValues.indexOf(y.domain()[0])),
-                        currentPoint = pointIndex(yValues.length - 1);
-                    return [minPoint, maxPoint, currentPoint].filter(function (d) {return d != null;});
-                });
-            points.enter().append('circle');
-            points.exit().remove();
-            points
-                .attr('cx', function(d,i) { return x(getX(d,d.pointIndex)) })
-                .attr('cy', function(d,i) { return y(getY(d,d.pointIndex)) })
-                .attr('r', 2)
-                .attr('class', function(d,i) {
-                    return getX(d, d.pointIndex) == x.domain()[1] ? 'nv-point nv-currentValue' :
-                            getY(d, d.pointIndex) == y.domain()[0] ? 'nv-point nv-minValue' : 'nv-point nv-maxValue'
-                });
-        });
+          /*wrapFirst.append("circle")
+           .attr("class", "dot")
+           .attr("cx", function(d) { return d[0]; })
+           .attr("cy", function(d) { return d[1]; })
+           .attr("r", 1);
+           wrapFirst.append("text")
+           .classed("nvd3-field-values", true)
+           .classed("label", true)
+           .attr("text-anchor", "middle")
+           .attr("x", function(d) { return d[0] + 25; })
+           .attr("y", function(d) { return d[1] + 25; })
+           .text("foo")
+           .attr("dx", "6")
+           .attr("dy", ".35em");*/
 
+            // TODO: Add CURRENT data point (Need Min, Mac, Current / Most recent)
+          var points = wrap.selectAll('circle.nv-point')
+            .data(function(data) {
+              var yValues = data.map(function(d, i) { return getY(d,i); });
+              function pointIndex(index) {
+                if (index != -1) {
+                  var result = data[index];
+                  result.pointIndex = index;
+                  return result;
+                } else {
+                  return null;
+                }
+              }
+              var maxPoint = pointIndex(yValues.lastIndexOf(y.domain()[1])),
+                minPoint = pointIndex(yValues.indexOf(y.domain()[0])),
+                currentPoint = pointIndex(yValues.length - 1);
+              return [minPoint, maxPoint, currentPoint].filter(function (d) {return d != null;});
+            });
+          points.enter().append('circle');
+          points.exit().remove();
+          points
+            .attr('cx', function(d,i) { return x(getX(d,d.pointIndex)) })
+            .attr('cy', function(d,i) { return y(getY(d,d.pointIndex)) })
+            .attr('r', 20)
+            .attr('class', function(d,i) {
+              return getX(d, d.pointIndex) == x.domain()[1] ? 'nv-point nv-currentValue' :
+                getY(d, d.pointIndex) == y.domain()[0] ? 'nv-point nv-minValue' : 'nv-point nv-maxValue'
+            });
+        });
         return chart;
     }
 
@@ -12959,13 +13005,13 @@ nv.models.sunburst = function() {
     var margin = {top: 0, right: 0, bottom: 0, left: 0}
         , width = null
         , height = null
+        , showValues = true
         , mode = "count"
         , modes = {count: function(d) { return 1; }, size: function(d) { return d.size }}
         , id = Math.floor(Math.random() * 10000) //Create semi-unique ID in case user doesn't select one
         , container = null
         , color = nv.utils.defaultColor()
         , duration = 500
-        , showValues = false
         , dispatch = d3.dispatch('chartClick', 'elementClick', 'elementDblClick', 'elementMousemove', 'elementMouseover', 'elementMouseout', 'renderEnd')
         ;
 
@@ -13009,7 +13055,6 @@ nv.models.sunburst = function() {
             var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-sunburst nv-chart-' + id);
 
             var g = wrapEnter.selectAll('nv-sunburst');
-
             wrap.attr('transform', 'translate(' + availableWidth / 2 + ',' + availableHeight / 2 + ')');
 
             container.on('click', function (d, i) {
@@ -13071,7 +13116,32 @@ nv.models.sunburst = function() {
                   return (d.children && d.depth !== 0 ? 'visible' : 'hidden');
                 });
 
-
+            if (showValues) {
+              path = g.data(partition.nodes).enter()
+                .append("text")
+                .text(function (d) {
+                  return d.size
+                })
+                .classed("nvd3-field-values", true)
+                .classed("label", true)
+                .attr("x", function (d) {
+                  return d.x - 5;
+                })
+                .attr("text-anchor", "middle")
+                .attr("transform", function (d) {
+                  if (d.depth > 0) {
+                    return "translate(" + arc.centroid(d) + ")";
+                  } else {
+                    return null;
+                  }
+                })
+                .attr("dx", "6") // margin
+                .attr("dy", ".35em") // vertical-align
+                .attr("pointer-events", "none")
+                .style("visibility", function (d) {
+                    return (d.children && d.depth !== 0 ? 'visible' : 'hidden');
+                  });
+            }
 
             // Setup for switching data: stash the old values for transition.
             function stash(d) {
@@ -13141,6 +13211,7 @@ nv.models.sunburst = function() {
         mode:       {get: function(){return mode;}, set: function(_){mode=_;}},
         id:         {get: function(){return id;}, set: function(_){id=_;}},
         duration:   {get: function(){return duration;}, set: function(_){duration=_;}},
+        showValues: {get: function(){return showValues;},     set: function(_){showValues=_;}},
 
         // options that require extra logic in the setter
         margin: {get: function(){return margin;}, set: function(_){
@@ -13175,6 +13246,7 @@ nv.models.sunburstChart = function() {
         , defaultState = null
         , noData = null
         , duration = 250
+        , showValues = true
         , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState','renderEnd')
         ;
 
@@ -13225,14 +13297,12 @@ nv.models.sunburstChart = function() {
             var g = wrap.select('g');
 
             gEnter.append('g').attr('class', 'nv-sunburstWrap');
-
             wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
             // Main Chart Component(s)
             sunburst.width(availableWidth).height(availableHeight);
             var sunWrap = g.select('.nv-sunburstWrap').datum(data);
             d3.transition(sunWrap).call(sunburst);
-
         });
 
         renderWatch.renderEnd('sunburstChart immediate');
@@ -13275,8 +13345,9 @@ nv.models.sunburstChart = function() {
         // simple options, just get/set the necessary values
         noData:         {get: function(){return noData;},         set: function(_){noData=_;}},
         defaultState:   {get: function(){return defaultState;},   set: function(_){defaultState=_;}},
+        showValues:     {get: function(){return showValues;},     set: function(_){showValues=_;}},
 
-        // options that require extra logic in the setter
+      // options that require extra logic in the setter
         color: {get: function(){return color;}, set: function(_){
             color = _;
             sunburst.color(color);
