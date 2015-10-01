@@ -5855,7 +5855,7 @@ nv.models.line = function() {
         , interpolate = "linear" // controls the line interpolation
         , duration = 250
         , dispatch = d3.dispatch('elementClick', 'elementMouseover', 'elementMouseout', 'renderEnd')
-        , showValues = true
+        , showValues = false
         ;
 
     scatter
@@ -5906,6 +5906,7 @@ nv.models.line = function() {
             wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
             scatter
+                .showValues(showValues)
                 .width(availableWidth)
                 .height(availableHeight);
 
@@ -5975,7 +5976,7 @@ nv.models.line = function() {
                         .apply(this, [d.values])
                 });
 
-          var linePaths = groups.selectAll('path.nv-line')
+            var linePaths = groups.selectAll('path.nv-line')
                 .data(function(d) { return [d.values] });
 
             linePaths.enter().append('path')
@@ -6094,7 +6095,7 @@ nv.models.lineChart = function() {
         , noData = null
         , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState', 'renderEnd')
         , duration = 250
-        , showValues = true
+        , showValues = false
         ;
 
     // set options on sub-objects for this chart
@@ -6235,6 +6236,7 @@ nv.models.lineChart = function() {
             }
 
             lines
+                .showValues(showValues)
                 .width(availableWidth)
                 .height(availableHeight)
                 .color(data.map(function(d,i) {
@@ -7106,6 +7108,7 @@ nv.models.lineWithFocusChart = function() {
         , transitionDuration = 250
         , state = nv.utils.state()
         , defaultState = null
+        , showValues = false
         ;
 
     lines.clipEdge(true).duration(0);
@@ -8687,6 +8690,7 @@ nv.models.multiBarHorizontal = function() {
                 .attr('y', data.length > 1 ? x.rangeBand() / (data.length * 2) + 3 : x.rangeBand() / (data.length * 2))
                 .attr('dy', '.32em')
                 .classed("nvd3-field-values", true)
+                .classed("fv-multiBarHorizontal", true)
                 .text(function(d,i) {
                   var t = d.y
                     , yerr = getYerr(d,i);
@@ -8854,6 +8858,7 @@ nv.models.multiBarHorizontalChart = function() {
         , dispatch = d3.dispatch('stateChange', 'changeState','renderEnd')
         , controlWidth = function() { return showControls ? 180 : 0 }
         , duration = 250
+        , showValues = false
         ;
 
     state.stacked = false; // DEPRECATED Maintained for backward compatibility
@@ -9005,6 +9010,7 @@ nv.models.multiBarHorizontalChart = function() {
 
             // Main Chart Component(s)
             multibar
+                .showValues(showValues)
                 .disabled(data.map(function(series) { return series.disabled }))
                 .width(availableWidth)
                 .height(availableHeight)
@@ -9159,8 +9165,9 @@ nv.models.multiBarHorizontalChart = function() {
         showYAxis:    {get: function(){return showYAxis;}, set: function(_){showYAxis=_;}},
         defaultState:    {get: function(){return defaultState;}, set: function(_){defaultState=_;}},
         noData:    {get: function(){return noData;}, set: function(_){noData=_;}},
+        showValues:    {get: function(){return showValues;}, set: function(_){showValues=_;}},
 
-        // deprecated options
+      // deprecated options
         tooltips:    {get: function(){return tooltip.enabled();}, set: function(_){
             // deprecated after 1.7.1
             nv.deprecated('tooltips', 'use chart.tooltip.enabled() instead');
@@ -11215,7 +11222,7 @@ nv.models.scatter = function() {
                 .type(function(d) { return getShape(d[0]); })
                 .size(function(d) { return z(getSize(d[0],d[1])) })
               );
-            if (true) {
+            if (showValues) {
               points.enter().append("text")
                 .attr("x", function (d) {
                   return d[0];
@@ -11231,8 +11238,8 @@ nv.models.scatter = function() {
                     return d[0].y;
                 })
                 .classed("nvd3-field-values", true)
+                .classed("fv-scatter", true)
                 .classed("label", true)
-                .classed("hover", true)
                 .attr("text-anchor", "middle")
             }
             points.exit().remove();
@@ -11403,6 +11410,7 @@ nv.models.scatterChart = function() {
         , dispatch = d3.dispatch('stateChange', 'changeState', 'renderEnd')
         , noData       = null
         , duration = 250
+        , showValues   = false
         ;
 
     scatter.xScale(x).yScale(y);
@@ -11545,6 +11553,7 @@ nv.models.scatterChart = function() {
 
             // Main Chart Component(s)
             scatter
+                .showValues(showValues)
                 .width(availableWidth)
                 .height(availableHeight)
                 .color(data.map(function(d,i) {
@@ -11728,6 +11737,7 @@ nv.models.scatterChart = function() {
         defaultState:     {get: function(){return defaultState;}, set: function(_){defaultState=_;}},
         noData:     {get: function(){return noData;}, set: function(_){noData=_;}},
         duration:   {get: function(){return duration;}, set: function(_){duration=_;}},
+        showValues: {get: function(){return showValues;}, set: function(_){showValues=_;}},
 
         // deprecated options
         tooltips:    {get: function(){return tooltip.enabled();}, set: function(_){
@@ -11829,21 +11839,6 @@ nv.models.sparkline = function() {
                     .x(function(d,i) { return x(getX(d,i)) })
                     .y(function(d,i) { return y(getY(d,i)) })
             );
-
-          /*wrapFirst.append("circle")
-           .attr("class", "dot")
-           .attr("cx", function(d) { return d[0]; })
-           .attr("cy", function(d) { return d[1]; })
-           .attr("r", 1);
-           wrapFirst.append("text")
-           .classed("nvd3-field-values", true)
-           .classed("label", true)
-           .attr("text-anchor", "middle")
-           .attr("x", function(d) { return d[0] + 25; })
-           .attr("y", function(d) { return d[1] + 25; })
-           .text("foo")
-           .attr("dx", "6")
-           .attr("dy", ".35em");*/
 
             // TODO: Add CURRENT data point (Need Min, Mac, Current / Most recent)
           var points = wrap.selectAll('circle.nv-point')
@@ -13005,7 +13000,7 @@ nv.models.sunburst = function() {
     var margin = {top: 0, right: 0, bottom: 0, left: 0}
         , width = null
         , height = null
-        , showValues = true
+        , showValues = false
         , mode = "count"
         , modes = {count: function(d) { return 1; }, size: function(d) { return d.size }}
         , id = Math.floor(Math.random() * 10000) //Create semi-unique ID in case user doesn't select one
@@ -13123,6 +13118,7 @@ nv.models.sunburst = function() {
                   return d.size
                 })
                 .classed("nvd3-field-values", true)
+                .classed("fv-sunburst", true)
                 .classed("label", true)
                 .attr("x", function (d) {
                   return d.x - 5;
@@ -13246,7 +13242,7 @@ nv.models.sunburstChart = function() {
         , defaultState = null
         , noData = null
         , duration = 250
-        , showValues = true
+        , showValues = false
         , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState','renderEnd')
         ;
 
@@ -13300,7 +13296,7 @@ nv.models.sunburstChart = function() {
             wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
             // Main Chart Component(s)
-            sunburst.width(availableWidth).height(availableHeight);
+            sunburst.width(availableWidth).height(availableHeight).showValues(showValues);
             var sunWrap = g.select('.nv-sunburstWrap').datum(data);
             d3.transition(sunWrap).call(sunburst);
         });
