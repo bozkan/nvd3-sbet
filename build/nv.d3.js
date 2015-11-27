@@ -1525,7 +1525,7 @@
       data = (noData == null) ? ["No Data Available."] : [noData],
       height = nv.utils.availableHeight(opt.height(), container, margin),
       width = nv.utils.availableWidth(opt.width(), container, margin),
-      x = margin.left + width/2,
+      x = margin.left + width/2 - 50,
       y = margin.top + height/2;
 
     //Remove any previously created chart components
@@ -13108,15 +13108,12 @@
             });
           })
           .style("visibility", function (d) { //stratabet added
-            return (d.children && d.depth !== 0 ? 'visible' : 'hidden');
+            return (d.depth == 0 || d.depth == 3 ? 'hidden' : 'visible');
           });
 
         if (showValues) {
           path = g.data(partition.nodes).enter()
             .append("text")
-            .text(function (d) {
-              return d.size
-            })
             .classed("nvd3-field-values", true)
             .classed("fv-sunburst", true)
             .classed("label", true)
@@ -13135,7 +13132,15 @@
             .attr("dy", ".35em") // vertical-align
             .attr("pointer-events", "none")
             .style("visibility", function (d) {
-              return (d.children && d.depth !== 0 ? 'visible' : 'hidden');
+              return (d.depth == 0 || d.depth == 3 ? 'hidden' : 'visible');
+            });
+          path.append("tspan").attr("dy","-5").attr("x","-6")
+            .text(function (d) {
+              return d.name
+            });
+          path.append("tspan").attr("dy","10").attr("x","0")
+            .text(function (d) {
+              return d.size
             });
         }
 
@@ -13292,13 +13297,25 @@
         var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-sunburstChart').append('g');
         var g = wrap.select('g');
 
-        gEnter.append('g').attr('class', 'nv-sunburstWrap');
+        var bb = gEnter.append('g').attr('class', 'nv-sunburstWrap');
         wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
         // Main Chart Component(s)
         sunburst.width(availableWidth).height(availableHeight).showValues(showValues);
         var sunWrap = g.select('.nv-sunburstWrap').datum(data);
         d3.transition(sunWrap).call(sunburst);
+
+        /* legend for sunburst */
+        var firstG = bb.append('g').attr('class', 'nv-legendWrap nvd3-svg').attr('transform', 'translate(0, -30)').append('g').attr('class', 'nvd3 nv-legend').attr('transform', 'translate(0, 5)').append('g').attr('transform', 'translate(translate(96.1875, 5)');
+        var firstG1 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(150, 5)');
+        var firstG2 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(240, 5)');
+        var firstG3 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(330, 5)');
+        firstG1.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(158, 202, 225); fill-opacity: 1;');
+        firstG1.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Good chances');
+        firstG2.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(253, 141, 60); fill-opacity: 1;');
+        firstG2.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Great chances');
+        firstG3.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(230, 85, 13); fill-opacity: 1;');
+        firstG3.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Attempts');
       });
 
       renderWatch.renderEnd('sunburstChart immediate');
