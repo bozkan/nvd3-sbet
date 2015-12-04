@@ -11225,10 +11225,10 @@
         if (showValues) {
           points.enter().append("text")
             .attr("x", function (d) {
-              return d[0];
+              return 0;
             })
             .attr("y", function (d) {
-              return d[1];
+              return 0;
             })
             .text(function (d) {
               //return d[0].team + ': ' + d[0].x + ', ' + d[0].y;
@@ -11242,6 +11242,32 @@
             .classed("label", true)
             .attr("text-anchor", "middle")
         }
+
+        points.attr('transform', function(d) {
+          //nv.log(d, getX(d[0],d[1]), x(getX(d[0],d[1])));
+          return 'translate(' + x(getX(d[0],d[1])) + ',' + y(getY(d[0],d[1])) + ')'
+        })
+
+        /* if round is chosen, fake x-axis headers as [1,2,3...] */
+        var xAxisForRound = true;
+        if (xAxisForRound) {
+          points.enter().append("text")
+            .attr("x", function (d) {
+              return 0;
+            })
+            .attr("y", function (d) {
+              return 0;
+            })
+            .text(function (d) { return d[1] + 1; })
+            .classed("nvd3-line-xaxis", true)
+            .classed("nvd3-field-values", true)
+            .classed("label", true)
+            .attr("text-anchor", "middle")
+            .attr('transform', function(d) {
+              return 'translate(' + x(getX(d[0],d[1])) + ',' + '310' + ')'
+            })
+        }
+
         points.exit().remove();
         groups.exit().selectAll('path.nv-point')
           .watchTransition(renderWatch, 'scatter exit')
@@ -11259,15 +11285,12 @@
         });
         points
           .watchTransition(renderWatch, 'scatter points')
-          .attr('transform', function(d) {
-            //nv.log(d, getX(d[0],d[1]), x(getX(d[0],d[1])));
-            return 'translate(' + x(getX(d[0],d[1])) + ',' + y(getY(d[0],d[1])) + ')'
-          })
           .attr('d',
           nv.utils.symbol()
             .type(function(d) { return getShape(d[0]); })
             .size(function(d) { return z(getSize(d[0],d[1])) })
         );
+
 
         // Delay updating the invisible interactive layer for smoother animation
         clearTimeout(timeoutID); // stop repeat calls to updateInteractiveLayer
