@@ -5856,6 +5856,7 @@
       , duration = 250
       , dispatch = d3.dispatch('elementClick', 'elementMouseover', 'elementMouseout', 'renderEnd')
       , showValues = false
+      , xAxisForRound = false
       ;
 
     scatter
@@ -6029,6 +6030,7 @@
       interpolate:      {get: function(){return interpolate;}, set: function(_){interpolate=_;}},
       clipEdge:    {get: function(){return clipEdge;}, set: function(_){clipEdge=_;}},
       showValues: {get: function(){return showValues;}, set: function(_){showValues=_;}},
+      xAxisForRound: {get: function(){return xAxisForRound;}, set: function(_){xAxisForRound=_; scatter.xAxisForRound(xAxisForRound)}},
 
       // options that require extra logic in the setter
       margin: {get: function(){return margin;}, set: function(_){
@@ -6096,6 +6098,7 @@
       , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState', 'renderEnd')
       , duration = 250
       , showValues = false
+      , xAxisForRound = false
       ;
 
     // set options on sub-objects for this chart
@@ -6239,6 +6242,7 @@
           .showValues(showValues)
           .width(availableWidth)
           .height(availableHeight)
+          .xAxisForRound(xAxisForRound)
           .color(data.map(function(d,i) {
             return d.color || color(d, i);
           }).filter(function(d,i) { return !data[i].disabled }));
@@ -6418,6 +6422,7 @@
       defaultState:    {get: function(){return defaultState;}, set: function(_){defaultState=_;}},
       noData:    {get: function(){return noData;}, set: function(_){noData=_;}},
       showValues: {get: function(){return showValues;}, set: function(_){showValues=_;}},
+      xAxisForRound: {get: function(){return xAxisForRound;}, set: function(_){xAxisForRound=_;}},
 
       // deprecated options
       tooltips:    {get: function(){return tooltip.enabled();}, set: function(_){
@@ -10877,6 +10882,7 @@
       , useVoronoi   = true
       , duration     = 250
       , showValues   = false
+      , xAxisForRound = false
       ;
 
 
@@ -11249,8 +11255,8 @@
         })
 
         /* if round is chosen, fake x-axis headers as [1,2,3...] */
-        var xAxisForRound = true;
         if (xAxisForRound) {
+          var yXaxis = height + 25;
           points.enter().append("text")
             .attr("x", function (d) {
               return 0;
@@ -11264,7 +11270,7 @@
             .classed("label", true)
             .attr("text-anchor", "middle")
             .attr('transform', function(d) {
-              return 'translate(' + x(getX(d[0],d[1])) + ',' + '310' + ')'
+              return 'translate(' + x(getX(d[0],d[1])) + ',' + yXaxis + ')'
             })
         }
 
@@ -11365,6 +11371,7 @@
       showVoronoi:   {get: function(){return showVoronoi;}, set: function(_){showVoronoi=_;}},
       id:           {get: function(){return id;}, set: function(_){id=_;}},
       showValues: {get: function(){return showValues;}, set: function(_){showValues=_;}},
+      xAxisForRound: {get: function(){return xAxisForRound;}, set: function(_){xAxisForRound=_;}},
 
 
       // simple functor options
@@ -13089,11 +13096,34 @@
         node = node || data;
         rootNode = data[0];
         partition.value(modes[mode] || modes["count"]);
+
+        function getRandomColor() {
+          var letters = '0123456789ABCDEF'.split('');
+          var color = '#';
+          for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+        }
+
         path = g.data(partition.nodes).enter()
           .append("path")
           .attr("d", arc)
           .style("fill", function (d) {
-            return color((d.children ? d : d.parent).name);
+            //return color((d.children ? d : d.parent).depth);
+            if (d.depth == 1) {
+              return color(d.name);
+            } else {
+              if (d.depth == 2) {
+                if (d.name == 'Attempts') {
+                  return 'rgb(230, 85, 13)';
+                } else if (d.name == 'Great chances') {
+                  return 'rgb(253, 141, 60)';
+                } else if (d.name == 'Good chances') {
+                  return 'rgb(158, 202, 225)';
+                }
+              }
+            }
           })
           .style("stroke", "#FFF")
           .on("click", function(d) {
