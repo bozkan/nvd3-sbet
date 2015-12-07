@@ -11256,7 +11256,7 @@
 
         /* if round is chosen, fake x-axis headers as [1,2,3...] */
         if (xAxisForRound) {
-          var yXaxis = height + 25;
+          var yXaxis = height + 15;
           points.enter().append("text")
             .attr("x", function (d) {
               return 0;
