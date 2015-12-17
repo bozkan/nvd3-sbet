@@ -13122,6 +13122,20 @@
                 } else if (d.name == 'Good chances') {
                   return 'rgb(158, 202, 225)';
                 }
+              } else if (d.depth == 3) {
+                if (d.name == 'Goal') {
+                  return '#d62728';
+                } else if (d.name == 'Woodwork') {
+                  return '#9467bd';
+                } else if (d.name == 'Save') {
+                  return '#8c564b';
+                } else if (d.name == 'Miss') {
+                  return '#e377c2';
+                } else if (d.name == 'Defended') {
+                  return '#7f7f7f';
+                } else if (d.name == 'unknown') {
+                  return '#bcbd22';
+                }
               }
             }
           })
@@ -13161,7 +13175,7 @@
             });
           })
           .style("visibility", function (d) { //stratabet added
-            return (d.depth == 0 || d.depth == 3 ? 'hidden' : 'visible');
+            return (d.name == "" ? 'hidden' : 'visible');
           });
 
         if (showValues) {
@@ -13169,14 +13183,34 @@
             .append("text")
             .classed("nvd3-field-values", true)
             .classed("fv-sunburst", true)
-            .classed("label", true)
-            .attr("x", function (d) {
-              return d.x - 5;
+            .classed("sub-sunburst", function (d) {
+              if (d.depth == 3 && d.name != '') {
+                return true;
+              } else
+                return false;
             })
-            .attr("text-anchor", "middle")
+            .classed("label", true)
+
+            .attr("text-anchor", function (d) {
+              if (d.depth == 3 && d.name != '') {
+                return "end";
+              } else {
+                return "middle";
+              }
+            })
             .attr("transform", function (d) {
               if (d.depth > 0) {
-                return "translate(" + arc.centroid(d) + ")";
+                if (d.depth == 3 && d.name != '') {
+                  var angle = (x(d.x + d.dx / 2) - Math.PI / 2) / Math.PI * 180;
+                  var dist = arc.centroid(d);
+                  if (angle > 90) {
+                    angle = angle + 180;
+                  }
+                  dist[1] -= 8;
+                  return "translate(" + dist + ")rotate(" + angle + ")"
+                } else {
+                  return "translate(" + arc.centroid(d) + ")";
+                }
               } else {
                 return null;
               }
@@ -13185,15 +13219,21 @@
             .attr("dy", ".35em") // vertical-align
             .attr("pointer-events", "none")
             .style("visibility", function (d) {
-              return (d.depth == 0 || d.depth == 3 ? 'hidden' : 'visible');
+              return (d.depth == 1 || d.depth == 2 || d.depth == 3 ? 'visible' : 'hidden');
             });
           path.append("tspan").attr("dy","-5").attr("x","-6")
             .text(function (d) {
-              return d.name
+              if (d.depth == 3 && d.name != '') {
+                return;
+              } else
+                return d.name
             });
           path.append("tspan").attr("dy","10").attr("x","0")
             .text(function (d) {
-              return d.size
+              if (d.depth == 3 && d.name == '') {
+                return;
+              } else
+                return d.size;
             });
         }
 
@@ -13369,6 +13409,49 @@
         firstG2.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Great chances');
         firstG3.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(230, 85, 13); fill-opacity: 1;');
         firstG3.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Attempts');
+
+        /* legend for sunburst - outermost layer */
+        firstG = bb.append('g').attr('class', 'nv-legendWrap nvd3-svg').attr('transform', 'translate(0, -30)').append('g').attr('class', 'nvd3 nv-legend').attr('transform', 'translate(0, 5)').append('g').attr('transform', 'translate(translate(96.1875, 5)');firstG1 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(410, 125)');
+        firstG1 = firstG.append('g').attr('class', 'nv-series g1').attr('transform', 'translate(480, 125)');
+        firstG2 = firstG.append('g').attr('class', 'nv-series g2').attr('transform', 'translate(480, 140)');
+        firstG3 = firstG.append('g').attr('class', 'nv-series g3').attr('transform', 'translate(480, 155)');
+        var firstG4 = firstG.append('g').attr('class', 'nv-series g4').attr('transform', 'translate(480, 170)');
+        var firstG5 = firstG.append('g').attr('class', 'nv-series g5').attr('transform', 'translate(480, 185)');
+
+        // Goal, woodwork, save, miss, defended, unknown
+        firstG1.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(214, 39, 40); fill-opacity: 1;');
+        /* 1st col: Good, 2nd col: Great - 1st child: team, 2nd child: good,great,attempt, 3rd child: 3rd layer*/
+        //var text = 'Defended: ' + data[0].children[0].children[0].children[0].size + '   ' + data[0].children[0].children[1].children[0].size;
+        firstG1.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Goal');
+        firstG2.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(148, 103, 189); fill-opacity: 1;');
+        firstG2.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Woodwork');
+        firstG3.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(140, 86, 75); fill-opacity: 1;');
+        firstG3.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Save');
+        firstG4.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(227, 119, 194); fill-opacity: 1;');
+        firstG4.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Miss');
+        firstG5.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(127, 127, 127); fill-opacity: 1;');
+        firstG5.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Defended');
+
+        /* legend for sunburst - outermost layer2 */
+        /*firstG1 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(10, 125)');
+        firstG2 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(10, 140)');
+        firstG3 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(10, 155)');
+        var firstG4 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(10, 170)');
+        var firstG5 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(10, 185)');
+        var firstG6 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(10, 200)');
+
+        firstG1.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(214, 39, 40); fill-opacity: 1;');
+        firstG1.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Goal');
+        firstG2.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(148, 103, 189); fill-opacity: 1;');
+        firstG2.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Woodwork');
+        firstG3.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(140, 86, 75); fill-opacity: 1;');
+        firstG3.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Save');
+        firstG4.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(227, 119, 194); fill-opacity: 1;');
+        firstG4.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Miss');
+        firstG5.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(127, 127, 127); fill-opacity: 1;');
+        firstG5.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Defended');
+        firstG6.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(188, 189, 34); fill-opacity: 1;');
+        firstG6.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Unknown');*/
       });
 
       renderWatch.renderEnd('sunburstChart immediate');
