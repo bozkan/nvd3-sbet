@@ -8695,6 +8695,7 @@
             .attr('y', data.length > 1 ? x.rangeBand() / (data.length * 2) + 3 : x.rangeBand() / (data.length * 2))
             .attr('dy', '.32em')
             .classed("nvd3-field-values", true)
+            .classed("shadowed-text", true)
             .classed("fv-multiBarHorizontal", true)
             .text(function(d,i) {
               var t = d.y
@@ -11244,6 +11245,7 @@
                 return d[0].y;
             })
             .classed("nvd3-field-values", true)
+            .classed("shadowed-text", true)
             .classed("fv-scatter", true)
             .classed("label", true)
             .attr("text-anchor", "middle")
@@ -13182,6 +13184,7 @@
           path = g.data(partition.nodes).enter()
             .append("text")
             .classed("nvd3-field-values", true)
+            .classed("shadowed-text", true)
             .classed("fv-sunburst", true)
             .classed("sub-sunburst", function (d) {
               if (d.depth == 3 && d.name != '') {
@@ -13400,9 +13403,12 @@
 
         /* legend for sunburst */
         var firstG = bb.append('g').attr('class', 'nv-legendWrap nvd3-svg').attr('transform', 'translate(0, -30)').append('g').attr('class', 'nvd3 nv-legend').attr('transform', 'translate(0, 5)').append('g').attr('transform', 'translate(translate(96.1875, 5)');
-        var firstG1 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(150, 5)');
-        var firstG2 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(240, 5)');
-        var firstG3 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(330, 5)');
+        var trans = 'translate(' + (availableWidth/2 - 105).toString() + ', 5)';
+        var firstG1 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans);
+        trans = 'translate(' + (availableWidth/2 - 15).toString() + ', 5)';
+        var firstG2 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans);
+        trans = 'translate(' + (availableWidth/2 + 75).toString() + ', 5)';
+        var firstG3 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans);
         firstG1.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(158, 202, 225); fill-opacity: 1;');
         firstG1.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Good chances');
         firstG2.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(253, 141, 60); fill-opacity: 1;');
@@ -13412,11 +13418,16 @@
 
         /* legend for sunburst - outermost layer */
         firstG = bb.append('g').attr('class', 'nv-legendWrap nvd3-svg').attr('transform', 'translate(0, -30)').append('g').attr('class', 'nvd3 nv-legend').attr('transform', 'translate(0, 5)').append('g').attr('transform', 'translate(translate(96.1875, 5)');firstG1 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(410, 125)');
-        firstG1 = firstG.append('g').attr('class', 'nv-series g1').attr('transform', 'translate(480, 125)');
-        firstG2 = firstG.append('g').attr('class', 'nv-series g2').attr('transform', 'translate(480, 140)');
-        firstG3 = firstG.append('g').attr('class', 'nv-series g3').attr('transform', 'translate(480, 155)');
-        var firstG4 = firstG.append('g').attr('class', 'nv-series g4').attr('transform', 'translate(480, 170)');
-        var firstG5 = firstG.append('g').attr('class', 'nv-series g5').attr('transform', 'translate(480, 185)');
+        trans = 'translate(' + (availableWidth - 60).toString() + ', 125)';
+        firstG1 = firstG.append('g').attr('class', 'nv-series g1').attr('transform', trans);
+        trans = 'translate(' + (availableWidth - 60).toString() + ', 140)';
+        firstG2 = firstG.append('g').attr('class', 'nv-series g2').attr('transform', trans);
+        trans = 'translate(' + (availableWidth - 60).toString() + ', 155)';
+        firstG3 = firstG.append('g').attr('class', 'nv-series g3').attr('transform', trans);
+        trans = 'translate(' + (availableWidth - 60).toString() + ', 170)';
+        var firstG4 = firstG.append('g').attr('class', 'nv-series g4').attr('transform', trans);
+        trans = 'translate(' + (availableWidth - 60).toString() + ', 185)';
+        var firstG5 = firstG.append('g').attr('class', 'nv-series g5').attr('transform', trans);
 
         // Goal, woodwork, save, miss, defended, unknown
         firstG1.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(214, 39, 40); fill-opacity: 1;');
