@@ -6974,9 +6974,11 @@
         value: chart.y()(evt.data),
         color: evt.color
       };
+      this.evt = evt;
       tooltip
         .duration(0)
         .valueFormatter(function(d, i) {
+          i = evt.data.x;
           return y1Axis.tickFormat()(d, i);
         })
         .data(evt)
