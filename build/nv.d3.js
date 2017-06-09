@@ -13406,17 +13406,30 @@
         /* legend for sunburst */
         var firstG = bb.append('g').attr('class', 'nv-legendWrap nvd3-svg').attr('transform', 'translate(0, -30)').append('g').attr('class', 'nvd3 nv-legend').attr('transform', 'translate(0, 5)').append('g').attr('transform', 'translate(translate(96.1875, 5)');
         var trans = 'translate(' + (availableWidth/2 - 105).toString() + ', 5)';
+        var trans2 = 'translate(' + (availableWidth/2 - 105).toString() + ', 20)';
         var firstG1 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans);
+        var firstG4 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans2);
         trans = 'translate(' + (availableWidth/2 - 15).toString() + ', 5)';
+        trans2 = 'translate(' + (availableWidth/2 - 15).toString() + ', 20)';
         var firstG2 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans);
+        var firstG5 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans2);
         trans = 'translate(' + (availableWidth/2 + 75).toString() + ', 5)';
+        trans2 = 'translate(' + (availableWidth/2 + 75).toString() + ', 20)';
         var firstG3 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans);
+        var firstG6 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans2);
         firstG1.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(158, 202, 225); fill-opacity: 1;');
-        firstG1.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Good chances');
+        firstG1.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Superb chances');
         firstG2.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(253, 141, 60); fill-opacity: 1;');
         firstG2.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Great chances');
         firstG3.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(230, 85, 13); fill-opacity: 1;');
-        firstG3.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Attempts');
+        firstG3.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Very good chances');
+
+        firstG4.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(225, 0, 0); fill-opacity: 1;');
+        firstG4.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Fairly good chances');
+        firstG5.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(0, 225, 0); fill-opacity: 1;');
+        firstG5.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Poor chances');
+        firstG6.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(0, 0, 225); fill-opacity: 1;');
+        firstG6.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Attempts');
 
         /* legend for sunburst - outermost layer */
         firstG = bb.append('g').attr('class', 'nv-legendWrap nvd3-svg').attr('transform', 'translate(0, -30)').append('g').attr('class', 'nvd3 nv-legend').attr('transform', 'translate(0, 5)').append('g').attr('transform', 'translate(translate(96.1875, 5)');firstG1 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(410, 125)');
@@ -13433,8 +13446,6 @@
 
         // Goal, woodwork, save, miss, defended, unknown
         firstG1.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(214, 39, 40); fill-opacity: 1;');
-        /* 1st col: Good, 2nd col: Great - 1st child: team, 2nd child: good,great,attempt, 3rd child: 3rd layer*/
-        //var text = 'Defended: ' + data[0].children[0].children[0].children[0].size + '   ' + data[0].children[0].children[1].children[0].size;
         firstG1.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Goal');
         firstG2.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(148, 103, 189); fill-opacity: 1;');
         firstG2.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Woodwork');
