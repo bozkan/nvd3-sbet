@@ -13520,7 +13520,7 @@
     chart.options = nv.utils.optionsFunc.bind(chart);
 
     // use Object get/set functionality to map between vars and chart functions
-    chart._options = Object.create({}, {d
+    chart._options = Object.create({}, {
       // simple options, just get/set the necessary values
       noData:         {get: function(){return noData;},         set: function(_){noData=_;}},
       defaultState:   {get: function(){return defaultState;},   set: function(_){defaultState=_;}},

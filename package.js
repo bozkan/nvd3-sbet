@@ -5,7 +5,7 @@
 Package.describe({
     "name": 'nvd3-sbet',
     summary: 'Nvd3.org charts.',
-    version: '1.1.8',
+    version: '1.1.9',
     git: "https://github.com/bozkan/nvd3-sbet.git"
 });
 Package.on_use(function (api) {
