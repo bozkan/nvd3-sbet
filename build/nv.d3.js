@@ -13124,12 +13124,12 @@
                 } else if (d.name == 'Great chances') {
                   return 'rgb(253, 141, 60)';
                 } else if (d.name == 'Very good chances') {
-                  return 'rgb(230, 85, 13)';
+                  return 'rgb(230, 185, 13)';
                 } else if (d.name == 'Fairly good chances') {
                     return 'rgb(225, 0, 0)';
                 } else if (d.name == 'Poor chances') {
                     return 'rgb(0, 225, 0)';
-                } else if (d.name == 'Attempts') {
+                } else if (d.name == 'Good chances') {
                     return 'rgb(0, 0, 225)';
                 }
               } else if (d.depth == 3) {
@@ -13427,7 +13427,7 @@
         firstG1.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Superb chances');
         firstG2.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(253, 141, 60); fill-opacity: 1;');
         firstG2.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Great chances');
-        firstG3.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(230, 85, 13); fill-opacity: 1;');
+        firstG3.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(230, 185, 13); fill-opacity: 1;');
         firstG3.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Very good chances');
 
         firstG4.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(225, 0, 0); fill-opacity: 1;');
@@ -13435,7 +13435,7 @@
         firstG5.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(0, 225, 0); fill-opacity: 1;');
         firstG5.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Poor chances');
         firstG6.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(0, 0, 225); fill-opacity: 1;');
-        firstG6.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Attempts');
+        firstG6.append('text').attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', 8).attr('fill', '#000').text('Good chances');
 
         /* legend for sunburst - outermost layer */
         firstG = bb.append('g').attr('class', 'nv-legendWrap nvd3-svg').attr('transform', 'translate(0, -30)').append('g').attr('class', 'nvd3 nv-legend').attr('transform', 'translate(0, 5)').append('g').attr('transform', 'translate(translate(96.1875, 5)');firstG1 = firstG.append('g').attr('class', 'nv-series').attr('transform', 'translate(410, 125)');
