@@ -13119,12 +13119,18 @@
               return color(d.name);
             } else {
               if (d.depth == 2) {
-                if (d.name == 'Attempts') {
-                  return 'rgb(230, 85, 13)';
+                if (d.name == 'Superb chances') {
+                  return 'rgb(158, 202, 225)';
                 } else if (d.name == 'Great chances') {
                   return 'rgb(253, 141, 60)';
-                } else if (d.name == 'Good chances') {
-                  return 'rgb(158, 202, 225)';
+                } else if (d.name == 'Very good chances') {
+                  return 'rgb(230, 85, 13)';
+                } else if (d.name == 'Fairly good chances') {
+                    return 'rgb(225, 0, 0)';
+                } else if (d.name == 'Poor chances') {
+                    return 'rgb(0, 225, 0)';
+                } else if (d.name == 'Attempts') {
+                    return 'rgb(0, 0, 225)';
                 }
               } else if (d.depth == 3) {
                 if (d.name == 'Goal') {
@@ -13405,16 +13411,16 @@
 
         /* legend for sunburst */
         var firstG = bb.append('g').attr('class', 'nv-legendWrap nvd3-svg').attr('transform', 'translate(0, -30)').append('g').attr('class', 'nvd3 nv-legend').attr('transform', 'translate(0, 5)').append('g').attr('transform', 'translate(translate(96.1875, 5)');
-        var trans = 'translate(' + (availableWidth/2 - 105).toString() + ', 5)';
-        var trans2 = 'translate(' + (availableWidth/2 - 105).toString() + ', 20)';
+        var trans = 'translate(' + (availableWidth/2 - 120).toString() + ', 5)';
+        var trans2 = 'translate(' + (availableWidth/2 - 120).toString() + ', 20)';
         var firstG1 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans);
         var firstG4 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans2);
         trans = 'translate(' + (availableWidth/2 - 15).toString() + ', 5)';
         trans2 = 'translate(' + (availableWidth/2 - 15).toString() + ', 20)';
         var firstG2 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans);
         var firstG5 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans2);
-        trans = 'translate(' + (availableWidth/2 + 75).toString() + ', 5)';
-        trans2 = 'translate(' + (availableWidth/2 + 75).toString() + ', 20)';
+        trans = 'translate(' + (availableWidth/2 + 90).toString() + ', 5)';
+        trans2 = 'translate(' + (availableWidth/2 + 90).toString() + ', 20)';
         var firstG3 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans);
         var firstG6 = firstG.append('g').attr('class', 'nv-series').attr('transform', trans2);
         firstG1.append('circle').attr('r', 5).attr('style', 'stroke-width: 2px; fill: rgb(158, 202, 225); fill-opacity: 1;');
@@ -13514,7 +13520,7 @@
     chart.options = nv.utils.optionsFunc.bind(chart);
 
     // use Object get/set functionality to map between vars and chart functions
-    chart._options = Object.create({}, {
+    chart._options = Object.create({}, {d
       // simple options, just get/set the necessary values
       noData:         {get: function(){return noData;},         set: function(_){noData=_;}},
       defaultState:   {get: function(){return defaultState;},   set: function(_){defaultState=_;}},
